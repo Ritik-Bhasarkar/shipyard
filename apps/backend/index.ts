@@ -9,9 +9,6 @@ app.use(express.json());
 app.post('/signup', async (req, res) => {
     const {username, password} = req.body;
 
-    console.log('Signup request received:', { username, password });
-    console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set');
-
     try {
         const user = await prisma.user.create({
             data: {
