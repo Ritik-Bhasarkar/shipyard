@@ -1,0 +1,98 @@
+USER
+USER_ID (PK)
+USERNAME
+PASSWORD
+
+ORGANIZATION
+ORG_ID (PK)
+ORG_NAME
+ORG_DESCRIPTION
+
+MEMBERSHIP
+MEMBER_ID (PK)
+USER_ID (FK)
+ORG_ID (FK)
+MEMBER_TYPE
+
+BOARD
+BOARD_ID (PK)
+BOARD_NAME
+ORG_ID (FK)
+
+SECTION
+SECTION_ID (PK)
+SECTION_TITLE
+BOARD_ID (FK)
+
+ISSUE
+ISSUE_ID (PK)
+ISSUE_NAME
+ISSUE_DESCRIPTION
+BOARD_ID (FK)
+SECTION_ID (FK)
+
+ISSUE_MAPPING
+ISSUE_ID (FK)
+USER_ID (FK)
+
+
+## RELATIONSHIPS
+
+USER → ORGANIZATION        N:N
+ORGANIZATION → BOARD       1:N
+BOARD → SECTION            1:N
+SECTION → ISSUE            1:N
+USER → ISSUE               N:N
+
+
+## API (rough)
+
+POST   /auth/signup
+POST   /auth/signin
+POST /orgnaization
+POST /boards
+POST /invite  -- ADMIN SENDING INVITE TO USER TO JOIN ORG
+POST /accept  --- {orgId: 1} --- accepting the invite I guess
+POST /Section
+POST /issues
+POST /comments
+
+GET /boards, /sections, /issues, /issue/:issueId, /organizations
+PUT /section, /issue, /board, /issue/move (moving the issue across section),
+
+DELETE /board , /organization,  /section, /comment, /issue/:issueId, /membership, 
+
+## API STRUCTURE
+
+POST /auth/signup
+POST /auth/signin
+
+POST   /organizations
+GET    /organizations
+GET    /organizations/:orgId
+DELETE /organizations/:orgId
+
+POST   /organizations/:orgId/invite
+POST   /organizations/:orgId/invite/accept
+DELETE /organizations/:orgId/members/:userId
+
+POST   /boards
+GET    /boards
+PUT    /boards/:boardId
+DELETE /boards/:boardId
+
+POST   /sections
+GET    /sections
+PUT    /sections/:sectionId
+DELETE /sections/:sectionId
+
+POST   /issues
+GET    /issues
+GET    /issues/:issueId
+PUT    /issues/:issueId
+DELETE /issues/:issueId
+
+PUT /issues/:issueId/move
+
+POST   /comments
+DELETE /comments/:commentId

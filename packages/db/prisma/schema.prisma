@@ -13,59 +13,60 @@ datasource db {
 }
 
 model User {
-  userId    String @id  @default(uuid())
-  username  String @unique
-  password  String
-  memberships Membership[]
+  userId        String         @id @default(uuid())
+  username      String         @unique
+  password      String
+  memberships   Membership[]
+  issueMappings IssueMapping[]
 }
 
-model Organization{
-  orgId String @id @default(uuid())
-  orgName String @unique
+model Organization {
+  orgId          String       @id @default(uuid())
+  orgName        String       @unique
   orgDescription String?
-  memberships Membership[]
+  memberships    Membership[]
+  boards         Board[]
 }
 
-model Membership{
-  userId String
-  orgId String
+model Membership {
+  userId     String
+  orgId      String
   memberType String
 
-  user User @relation(fields: [userId], references: [userId])
+  user         User         @relation(fields: [userId], references: [userId])
   organization Organization @relation(fields: [orgId], references: [orgId])
 
   @@id([userId, orgId])
 }
 
-model Board{
-  boardId String @id @default(uuid())
-  boardName String
-  orgId String
+model Board {
+  boardId      String       @id @default(uuid())
+  boardName    String
+  orgId        String
   organization Organization @relation(fields: [orgId], references: [orgId])
-  sections Section[]
-  issues Issue[]
+  sections     Section[]
+  issues       Issue[]
 }
 
-model Section{
-  sectionId String @id @default(uuid())
+model Section {
+  sectionId    String @id @default(uuid())
   sectionTitle String
-  boardId String
+  boardId      String
 
-  board Board @relation(fields: [boardId], references: [boardId])
+  board  Board   @relation(fields: [boardId], references: [boardId])
   issues Issue[]
-
 }
 
 model Issue {
-  issueId          String @id @default(uuid())
+  issueId          String  @id @default(uuid())
   issueName        String
   issueDescription String?
   boardId          String
   sectionId        String
 
-  board Board @relation(fields: [boardId],references: [boardId])
+  board Board @relation(fields: [boardId], references: [boardId])
 
-  section Section @relation(fields: [sectionId],references: [sectionId])
+  section Section @relation(fields: [sectionId], references: [sectionId])
 
   assignees IssueMapping[]
 }
@@ -74,9 +75,9 @@ model IssueMapping {
   issueId String
   userId  String
 
-  issue Issue @relation(fields: [issueId],references: [issueId])
+  issue Issue @relation(fields: [issueId], references: [issueId])
 
-  user User @relation(fields: [userId],references: [userId])
+  user User @relation(fields: [userId], references: [userId])
 
   @@id([issueId, userId])
 }
