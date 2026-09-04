@@ -8,8 +8,8 @@ import { createOrganizationController,
 const router = Router();
 
 router.post('/', createOrganizationController);
-router.post('/', getOrganizationsController);
+router.get('/', getOrganizationsController);
 router.get('/:orgId', getOrganizationByIdController);
-router.delete(':/orgId', deleteOrganizationController);
+router.delete('/:orgId', deleteOrganizationController);
 
 export default router;

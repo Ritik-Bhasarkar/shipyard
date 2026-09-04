@@ -12,6 +12,7 @@ export async function createOrganizationController(req: Request, res: Response){
 
         return res.status(201).json(organization);
     }catch(error){
+        console.error(error);
         return res.status(500).json({
             message:"Failed to create organization",
         })
@@ -48,7 +49,7 @@ export async function getOrganizationByIdController(req: Request, res: Response)
             })
         }
 
-        return res.status(201).json(organization);
+        return res.status(200).json(organization);
     }catch(error){
         return res.status(500).json({
             message:"Failed to create organization",
