@@ -109,3 +109,9 @@ bun --hot ./index.ts
 ```
 
 For more information, read the Bun API docs in `node_modules/bun-types/docs/**.mdx`.
+
+## Formatting
+
+- Use four spaces for each indentation level; do not use tabs for indentation.
+- Leave one blank line between functions, control-flow blocks, and separate logical statements.
+- Keep related lines together, but separate distinct logical sections with a blank line.

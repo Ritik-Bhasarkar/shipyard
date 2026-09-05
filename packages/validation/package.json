@@ -1,19 +1,18 @@
 {
-  "name": "backend",
+  "name": "validation",
   "module": "index.ts",
   "type": "module",
   "private": true,
   "devDependencies": {
     "@types/bun": "latest"
   },
+  "exports":{
+    ".": "./index.ts"
+  },
   "peerDependencies": {
     "typescript": "^7"
   },
   "dependencies": {
-    "@types/express": "^5.0.6",
-    "db": "*",
-    "express": "^5.2.1",
-    "validation": "*",
     "zod": "^4.5.4"
   }
 }
