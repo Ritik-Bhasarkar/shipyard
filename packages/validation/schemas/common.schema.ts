@@ -4,24 +4,33 @@ import { z } from "zod";
 export const idSchema = z.string().trim().min(1);
 
 export const organizationIdSchema = z.object({
-    orgId: idSchema,
+	orgId: idSchema,
 });
 
 export const boardIdSchema = z.object({
-    boardId: idSchema,
+	boardId: idSchema,
 });
 
-export const organizationBoardIdSchema = organizationIdSchema.merge(boardIdSchema);
-
+export const organizationBoardIdSchema =
+	organizationIdSchema.merge(boardIdSchema);
 
 export const sectionIdSchema = z.object({
-    sectionId: idSchema,
+	sectionId: idSchema,
 });
 
 export const issueIdSchema = z.object({
-    issueId: idSchema,
+	issueId: idSchema,
 });
 
 export const commentIdSchema = z.object({
-    commentId: idSchema,
+	commentId: idSchema,
 });
+
+export const organizationBoardSectionIdSchema =
+	organizationBoardIdSchema.merge(sectionIdSchema);
+
+export const organizationBoardIssueIdSchema =
+	organizationBoardIdSchema.merge(issueIdSchema);
+
+export const organizationBoardIssueCommentIdSchema =
+	organizationBoardIssueIdSchema.merge(commentIdSchema);

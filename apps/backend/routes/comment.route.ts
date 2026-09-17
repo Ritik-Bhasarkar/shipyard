@@ -1,44 +1,54 @@
 import { Router } from "express";
 import {
-    commentIdSchema,
-    createCommentSchema,
-    updateCommentSchema,
+	createCommentSchema,
+	organizationBoardIssueIdSchema,
+	organizationBoardIssueCommentIdSchema,
+	updateCommentSchema,
 } from "validation";
 import {
-    createCommentController,
-    getCommentsController,
-    getCommentByIdController,
-    updateCommentController,
-    deleteCommentController,
+	createCommentController,
+	getCommentsController,
+	getCommentByIdController,
+	updateCommentController,
+	deleteCommentController,
 } from "../controllers/comment.controller";
 import {
-    validateBody,
-    validateParams,
+	validateBody,
+	validateParams,
 } from "../middleware/validation.middleware";
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
-router.post("/", validateBody(createCommentSchema), createCommentController);
-
-router.get("/", getCommentsController);
+router.post(
+	"/",
+	validateParams(organizationBoardIssueIdSchema),
+	validateBody(createCommentSchema),
+	createCommentController,
+);
 
 router.get(
-    "/:commentId",
-    validateParams(commentIdSchema),
-    getCommentByIdController,
+	"/",
+	validateParams(organizationBoardIssueIdSchema),
+	getCommentsController,
+);
+
+router.get(
+	"/:commentId",
+	validateParams(organizationBoardIssueCommentIdSchema),
+	getCommentByIdController,
 );
 
 router.patch(
-    "/:commentId",
-    validateParams(commentIdSchema),
-    validateBody(updateCommentSchema),
-    updateCommentController,
+	"/:commentId",
+	validateParams(organizationBoardIssueCommentIdSchema),
+	validateBody(updateCommentSchema),
+	updateCommentController,
 );
 
 router.delete(
-    "/:commentId",
-    validateParams(commentIdSchema),
-    deleteCommentController,
+	"/:commentId",
+	validateParams(organizationBoardIssueCommentIdSchema),
+	deleteCommentController,
 );
 
 export default router;

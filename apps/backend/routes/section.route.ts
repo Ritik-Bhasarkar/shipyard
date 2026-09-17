@@ -1,44 +1,54 @@
 import { Router } from "express";
 import {
-    createSectionSchema,
-    sectionIdSchema,
-    updateSectionSchema,
+  createSectionSchema,
+  organizationBoardIdSchema,
+  organizationBoardSectionIdSchema,
+  updateSectionSchema,
 } from "validation";
 import {
-    createSectionController,
-    getSectionsController,
-    getSectionByIdController,
-    updateSectionController,
-    deleteSectionController,
+  createSectionController,
+  getSectionsController,
+  getSectionByIdController,
+  updateSectionController,
+  deleteSectionController,
 } from "../controllers/section.controller";
 import {
-    validateBody,
-    validateParams,
+  validateBody,
+  validateParams,
 } from "../middleware/validation.middleware";
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
-router.post("/", validateBody(createSectionSchema), createSectionController);
-
-router.get("/", getSectionsController);
+router.post(
+  "/",
+  validateParams(organizationBoardIdSchema),
+  validateBody(createSectionSchema),
+  createSectionController,
+);
 
 router.get(
-    "/:sectionId",
-    validateParams(sectionIdSchema),
-    getSectionByIdController,
+  "/",
+  validateParams(organizationBoardIdSchema),
+  getSectionsController,
+);
+
+router.get(
+  "/:sectionId",
+  validateParams(organizationBoardSectionIdSchema),
+  getSectionByIdController,
 );
 
 router.patch(
-    "/:sectionId",
-    validateParams(sectionIdSchema),
-    validateBody(updateSectionSchema),
-    updateSectionController,
+  "/:sectionId",
+  validateParams(organizationBoardSectionIdSchema),
+  validateBody(updateSectionSchema),
+  updateSectionController,
 );
 
 router.delete(
-    "/:sectionId",
-    validateParams(sectionIdSchema),
-    deleteSectionController,
+  "/:sectionId",
+  validateParams(organizationBoardSectionIdSchema),
+  deleteSectionController,
 );
 
 export default router;

@@ -11,22 +11,25 @@ const app = express();
 app.use(express.json());
 
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type");
+	res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+	res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
+	res.header("Access-Control-Allow-Headers", "Content-Type");
 
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(204);
-    }
+	if (req.method === "OPTIONS") {
+		return res.sendStatus(204);
+	}
 
-    next();
+	next();
 });
 
 app.use("/organization", organizationRoutes);
 app.use("/organizations/:orgId/boards", boardRoutes);
-app.use("/sections", sectionRoutes);
-app.use("/issues", issueRoutes);
-app.use("/comments", commentRoutes);
+app.use("/organizations/:orgId/boards/:boardId/sections", sectionRoutes);
+app.use("/organizations/:orgId/boards/:boardId/issues", issueRoutes);
+app.use(
+	"/organizations/:orgId/boards/:boardId/issues/:issueId/comments",
+	commentRoutes,
+);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
@@ -34,5 +37,5 @@ app.use(errorHandler);
 const port = Number(Bun.env.PORT ?? 3001);
 
 app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+	console.log(`Server running on http://localhost:${port}`);
 });

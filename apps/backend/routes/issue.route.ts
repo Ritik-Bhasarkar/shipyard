@@ -1,40 +1,50 @@
 import { Router } from "express";
 import {
-    createIssueSchema,
-    issueIdSchema,
-    updateIssueSchema,
+	createIssueSchema,
+	organizationBoardIdSchema,
+	organizationBoardIssueIdSchema,
+	updateIssueSchema,
 } from "validation";
 import {
-    createIssueController,
-    getIssuesController,
-    getIssueByIdController,
-    updateIssueController,
-    deleteIssueController,
+	createIssueController,
+	getIssuesController,
+	getIssueByIdController,
+	updateIssueController,
+	deleteIssueController,
 } from "../controllers/issue.controller";
 import {
-    validateBody,
-    validateParams,
+	validateBody,
+	validateParams,
 } from "../middleware/validation.middleware";
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
-router.post("/", validateBody(createIssueSchema), createIssueController);
+router.post(
+	"/",
+	validateParams(organizationBoardIdSchema),
+	validateBody(createIssueSchema),
+	createIssueController,
+);
 
-router.get("/", getIssuesController);
+router.get("/", validateParams(organizationBoardIdSchema), getIssuesController);
 
-router.get("/:issueId", validateParams(issueIdSchema), getIssueByIdController);
+router.get(
+	"/:issueId",
+	validateParams(organizationBoardIssueIdSchema),
+	getIssueByIdController,
+);
 
 router.patch(
-    "/:issueId",
-    validateParams(issueIdSchema),
-    validateBody(updateIssueSchema),
-    updateIssueController,
+	"/:issueId",
+	validateParams(organizationBoardIssueIdSchema),
+	validateBody(updateIssueSchema),
+	updateIssueController,
 );
 
 router.delete(
-    "/:issueId",
-    validateParams(issueIdSchema),
-    deleteIssueController,
+	"/:issueId",
+	validateParams(organizationBoardIssueIdSchema),
+	deleteIssueController,
 );
 
 export default router;
