@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/organization", organizationRoutes);
-app.use("/boards", boardRoutes);
+app.use("/organizations/:orgId/boards", boardRoutes);
 app.use("/sections", sectionRoutes);
 app.use("/issues", issueRoutes);
 app.use("/comments", commentRoutes);

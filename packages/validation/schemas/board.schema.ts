@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const createBoardSchema = z.object({
     boardName: z.string().trim().min(1),
-    orgId: z.string().trim().min(1),
 });
 
 export const updateBoardSchema = z

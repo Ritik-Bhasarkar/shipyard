@@ -12,6 +12,10 @@ const DashboardPage = async ({ params }: DashboardPageProps) => {
 		cache: "no-store",
 	});
 
+	if (!response.ok) {
+		throw new Error("Failed to fetch organization");
+	}
+
 	const data = await response.json();
 
 	return (

@@ -11,6 +11,9 @@ export const boardIdSchema = z.object({
     boardId: idSchema,
 });
 
+export const organizationBoardIdSchema = organizationIdSchema.merge(boardIdSchema);
+
+
 export const sectionIdSchema = z.object({
     sectionId: idSchema,
 });

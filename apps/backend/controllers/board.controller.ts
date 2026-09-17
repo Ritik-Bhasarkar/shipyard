@@ -7,13 +7,25 @@ import {
 	deleteBoardById,
 } from "../services/board.service";
 
-export async function createBoardController(req: Request, res: Response) {
-	const { boardName, orgId } = req.body;
-	return res.status(201).json(await createBoard(boardName, orgId));
+export async function createBoardController(
+	req: Request<{ orgId: string }>,
+	res: Response,
+) {
+	const { orgId } = req.params;
+	const { boardName } = req.body;
+
+	const board = await createBoard(boardName, orgId);
+	return res.status(201).json(board);
 }
 
-export async function getBoardsController(req: Request, res: Response) {
-	return res.status(200).json(await getBoards());
+export async function getBoardsController(
+	req: Request<{ orgId: string }>,
+	res: Response,
+) {
+	const { orgId } = req.params;
+
+	const boards = await getBoards(orgId);
+	return res.status(200).json(boards);
 }
 
 export async function getBoardByIdController(req: Request, res: Response) {
