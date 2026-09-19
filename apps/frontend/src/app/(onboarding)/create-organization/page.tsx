@@ -42,7 +42,6 @@ const Organization = () => {
 			}
 
 			const data = await response.json();
-			console.log("data", data);
 
 			router.push(`/o/${data.orgId}`);
 		} catch (submitError) {
