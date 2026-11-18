@@ -1,14 +1,14 @@
 "use client";
 
+import {
+	createBoard,
+	deleteBoard,
+	fetchBoards,
+	type Board,
+} from "@/lib/api/boards.api";
 import { ROOT_URL } from "@/root.url";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-export interface Board {
-	boardId: string;
-	boardName: string;
-	orgId: string;
-}
 
 export interface Organization {
 	orgId: string;
@@ -24,64 +24,69 @@ export interface DashboardProps {
 const Dashboard = ({ organization }: DashboardProps) => {
 	const [boards, setBoards] = useState<Board[]>([]);
 	const [boardName, setBoardName] = useState("");
-
-	const fetchBoards = async (orgId: string): Promise<Board[]> => {
-		const response = await fetch(
-			`${ROOT_URL}/organizations/${orgId}/boards`,
-		);
-
-		if (!response.ok) {
-			throw new Error("Failed to fetch boards");
-		}
-
-		const data = await response.json();
-		return data ?? [];
-	};
+	const router = useRouter();
 
 	useEffect(() => {
-		const loadBoards = async () => {
+		const loadFetch = async () => {
 			try {
 				const data = await fetchBoards(organization.orgId);
 				setBoards(data);
 			} catch (error) {
-				console.error("Couldn't get boards", error);
+				console.log("Failed to Load Boards", error);
 			}
 		};
-		loadBoards();
+		loadFetch();
 	}, [organization.orgId]);
 
-	const createBoard = async () => {
+	const handleCreateBoard = async () => {
 		const trimmedName = boardName.trim();
 
 		if (!trimmedName) return;
 
 		try {
-			const response = await fetch(
-				`${ROOT_URL}/organizations/${organization.orgId}/boards`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						boardName: trimmedName,
-					}),
-				},
-			);
-
-			if (!response.ok) {
-				throw new Error("Failed to create board");
-			}
+			await createBoard(organization.orgId, trimmedName);
 
 			setBoardName("");
 
-			await fetchBoards(organization.orgId);
+			setBoards(await fetchBoards(organization.orgId));
 		} catch (error) {
 			console.error("Couldn't create board", error);
 		}
 	};
 
-	const router = useRouter();
+	const handleDeleteBoard = async (boardId: string) => {
+		try {
+			await deleteBoard(organization.orgId, boardId);
+
+			setBoards(await fetchBoards(organization.orgId));
+		} catch (error) {
+			console.error("Couldn't delete board", error);
+		}
+	};
+
+	const RenameBoard = async (boardId: string, boardName: string) => {
+		try {
+			const response = await fetch(
+				`${ROOT_URL}/organizations/${organization.orgId}/boards/${boardId}`,
+				{
+					method: "PATCH",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						boardName: boardName,
+					}),
+				},
+			);
+			if (!response.ok) {
+				throw new Error("Failed to rename Board");
+			}
+
+			setBoards(await fetchBoards(organization.orgId));
+		} catch (error) {
+			console.error("Failed to rename Board", error);
+		}
+	};
 
 	return (
 		<div>
@@ -100,19 +105,25 @@ const Dashboard = ({ organization }: DashboardProps) => {
 					placeholder="Board name"
 				/>
 
-				<button onClick={createBoard}>Create Board</button>
+				<button onClick={handleCreateBoard}>Create Board</button>
 
 				{boards.map((board) => (
-					<div
-						style={{ cursor: "pointer" }}
-						role="button"
-						key={board.boardId}
-						onClick={() =>
-							router.push(
-								`/o/${organization.orgId}/b/${board.boardId}`,
-							)
-						}>
-						{board.boardName}
+					<div key={board.boardId}>
+						<div
+							style={{ cursor: "pointer" }}
+							role="button"
+
+							onClick={() =>
+								router.push(
+									`/o/${organization.orgId}/b/${board.boardId}`,
+								)
+							}>
+							{board.boardName}
+						</div>
+
+						<button onClick={() => handleDeleteBoard(board.boardId)}>
+							Delete
+						</button>
 					</div>
 				))}
 			</div>
