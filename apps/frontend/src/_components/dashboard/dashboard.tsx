@@ -44,11 +44,14 @@ const Dashboard = ({ organization }: DashboardProps) => {
 		if (!trimmedName) return;
 
 		try {
-			await createBoard(organization.orgId, trimmedName);
+			const newBoards = await createBoard(
+				organization.orgId,
+				trimmedName,
+			);
 
 			setBoardName("");
 
-			setBoards(await fetchBoards(organization.orgId));
+			setBoards((prev) => [...prev, newBoards]);
 		} catch (error) {
 			console.error("Couldn't create board", error);
 		}
@@ -121,7 +124,8 @@ const Dashboard = ({ organization }: DashboardProps) => {
 							{board.boardName}
 						</div>
 
-						<button onClick={() => handleDeleteBoard(board.boardId)}>
+						<button
+							onClick={() => handleDeleteBoard(board.boardId)}>
 							Delete
 						</button>
 					</div>

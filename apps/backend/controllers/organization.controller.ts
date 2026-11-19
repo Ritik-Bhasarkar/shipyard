@@ -13,7 +13,7 @@ export async function createOrganizationController(
 	const { orgName, orgDescription } = req.body;
 	return res
 		.status(201)
-		.json(await createOrganization(orgName, orgDescription));
+		.json(await createOrganization({ orgName, orgDescription }));
 }
 
 export async function getOrganizationsController(req: Request, res: Response) {
@@ -25,7 +25,7 @@ export async function getOrganizationByIdController(
 	res: Response,
 ) {
 	const orgId = req.params.orgId as string;
-	const organization = await getOrganizationById(orgId);
+	const organization = await getOrganizationById({ orgId });
 	if (!organization)
 		return res.status(404).json({ message: "Organization not found" });
 	return res.status(200).json(organization);
@@ -36,7 +36,7 @@ export async function deleteOrganizationController(
 	res: Response,
 ) {
 	const orgId = req.params.orgId as string;
-	const organization = await deleteOrganization(orgId);
+	const organization = await deleteOrganization({ orgId });
 	return res
 		.status(200)
 		.json({ message: "Organization deleted successfully", organization });

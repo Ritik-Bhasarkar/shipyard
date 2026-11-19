@@ -1,25 +1,33 @@
 import { prisma } from "db/client";
+import type {
+	CreateSectionParams,
+	GetSectionsParams,
+	GetSectionByIdParams,
+	UpdateSectionParams,
+	DeleteSectionParams,
+} from "../types/section.types";
 
-export async function createSection(
-	sectionTitle: string,
-	boardId: string,
-	orgId: string,
-) {
+export async function createSection({
+	orgId,
+	boardId,
+	sectionTitle,
+}: CreateSectionParams) {
 	const board = await prisma.board.findFirst({
-		where: { boardId, orgId },
+		where: { orgId, boardId },
 		select: { boardId: true },
 	});
+
 	if (!board) return null;
 
 	return prisma.section.create({
 		data: {
-			sectionTitle,
 			boardId,
+			sectionTitle,
 		},
 	});
 }
 
-export function getSections(boardId: string, orgId: string) {
+export function getSections({ boardId, orgId }: GetSectionsParams) {
 	return prisma.section.findMany({
 		where: { boardId, board: { orgId } },
 		orderBy: {
@@ -28,23 +36,28 @@ export function getSections(boardId: string, orgId: string) {
 	});
 }
 
-export function getSectionById(
-	sectionId: string,
-	boardId: string,
-	orgId: string,
-) {
+export function getSectionById({
+	sectionId,
+	boardId,
+	orgId,
+}: GetSectionByIdParams) {
 	return prisma.section.findFirst({
 		where: { sectionId, boardId, board: { orgId } },
 	});
 }
 
-export async function updateSection(
-	sectionId: string,
-	boardId: string,
-	orgId: string,
-	sectionTitle?: string,
-) {
-	const section = await getSectionById(sectionId, boardId, orgId);
+export async function updateSection({
+	sectionId,
+	boardId,
+	orgId,
+	sectionTitle,
+}: UpdateSectionParams) {
+	const section = await getSectionById({
+		sectionId,
+		boardId,
+		orgId,
+	});
+
 	if (!section) return null;
 
 	return prisma.section.update({
@@ -53,13 +66,20 @@ export async function updateSection(
 	});
 }
 
-export async function deleteSection(
-	sectionId: string,
-	boardId: string,
-	orgId: string,
-) {
-	const section = await getSectionById(sectionId, boardId, orgId);
+export async function deleteSection({
+	sectionId,
+	boardId,
+	orgId,
+}: DeleteSectionParams) {
+	const section = await getSectionById({
+		sectionId,
+		boardId,
+		orgId,
+	});
+
 	if (!section) return null;
 
-	return prisma.section.delete({ where: { sectionId } });
+	return prisma.section.delete({
+		where: { sectionId },
+	});
 }

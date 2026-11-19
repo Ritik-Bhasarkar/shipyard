@@ -12,11 +12,11 @@ export async function createSectionController(
 	res: Response,
 ) {
 	const { sectionTitle } = req.body;
-	const section = await createSection(
+	const section = await createSection({
 		sectionTitle,
-		req.params.boardId,
-		req.params.orgId,
-	);
+		boardId: req.params.boardId,
+		orgId: req.params.orgId,
+	});
 	if (!section) return res.status(404).json({ message: "Board not found" });
 	return res.status(201).json(section);
 }
@@ -25,9 +25,12 @@ export async function getSectionsController(
 	req: Request<{ orgId: string; boardId: string }>,
 	res: Response,
 ) {
-	return res
-		.status(200)
-		.json(await getSections(req.params.boardId, req.params.orgId));
+	return res.status(200).json(
+		await getSections({
+			boardId: req.params.boardId,
+			orgId: req.params.orgId,
+		}),
+	);
 }
 
 export async function getSectionByIdController(
@@ -35,11 +38,11 @@ export async function getSectionByIdController(
 	res: Response,
 ) {
 	const sectionId = req.params.sectionId as string;
-	const section = await getSectionById(
+	const section = await getSectionById({
 		sectionId,
-		req.params.boardId,
-		req.params.orgId,
-	);
+		boardId: req.params.boardId,
+		orgId: req.params.orgId,
+	});
 	if (!section) return res.status(404).json({ message: "Section not found" });
 	return res.status(200).json(section);
 }
@@ -49,12 +52,12 @@ export async function updateSectionController(
 	res: Response,
 ) {
 	const sectionId = req.params.sectionId as string;
-	const section = await updateSection(
+	const section = await updateSection({
 		sectionId,
-		req.params.boardId,
-		req.params.orgId,
-		req.body.sectionTitle,
-	);
+		boardId: req.params.boardId,
+		orgId: req.params.orgId,
+		sectionTitle: req.body.sectionTitle,
+	});
 	if (!section) return res.status(404).json({ message: "Section not found" });
 	return res.status(200).json(section);
 }
@@ -64,11 +67,11 @@ export async function deleteSectionController(
 	res: Response,
 ) {
 	const sectionId = req.params.sectionId as string;
-	const section = await deleteSection(
+	const section = await deleteSection({
 		sectionId,
-		req.params.boardId,
-		req.params.orgId,
-	);
+		boardId: req.params.boardId,
+		orgId: req.params.orgId,
+	});
 	if (!section) return res.status(404).json({ message: "Section not found" });
 	return res.status(204).send();
 }

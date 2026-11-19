@@ -14,7 +14,6 @@ export async function fetchBoards(orgId: string): Promise<Board[]> {
 	}
 
 	const data = await response.json();
-	console.log("fetch boards:", data);
 	return data ?? [];
 }
 
@@ -30,9 +29,14 @@ export async function createBoard(orgId: string, boardName: string) {
 	if (!response.ok) {
 		throw new Error("Failed to create board");
 	}
+
+	return response.json();
 }
 
-export async function deleteBoard(orgId: string, boardId: string) {
+export async function deleteBoard(
+	orgId: string,
+	boardId: string,
+): Promise<void> {
 	const response = await fetch(
 		`${ROOT_URL}/organizations/${orgId}/boards/${boardId}`,
 		{
