@@ -1,10 +1,23 @@
 import "server-only";
 import { ROOT_URL } from "@/root.url";
 
-export async function createOrganization(
-	orgName: string,
-	orgDescription?: string,
-) {
+interface CreateOrganizationParams {
+	orgName: string;
+	orgDescription?: string;
+}
+
+interface GetOrganizationByIdParams {
+	orgId: string;
+}
+
+interface DeleteOrganizationParams {
+	orgId: string;
+}
+
+export async function createOrganization({
+	orgName,
+	orgDescription,
+}: CreateOrganizationParams) {
 	const response = await fetch(`${ROOT_URL}/organization`, {
 		method: "POST",
 		headers: {
@@ -23,17 +36,19 @@ export async function createOrganization(
 	return response.json();
 }
 
-export async function getOrganizationById(orgId: string) {
+export async function getOrganizationById({
+	orgId,
+}: GetOrganizationByIdParams) {
 	const response = await fetch(`${ROOT_URL}/organization/${orgId}`);
 
 	if (!response.ok) {
-		throw Error("Failed to get Organization");
+		throw new Error("Failed to get Organization");
 	}
 
 	return response.json();
 }
 
-export async function deleteOrganization(orgId: string) {
+export async function deleteOrganization({ orgId }: DeleteOrganizationParams) {
 	const response = await fetch(`${ROOT_URL}/organization/${orgId}`, {
 		method: "DELETE",
 	});

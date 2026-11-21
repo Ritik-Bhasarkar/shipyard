@@ -29,7 +29,7 @@ const Dashboard = ({ organization }: DashboardProps) => {
 	useEffect(() => {
 		const loadFetch = async () => {
 			try {
-				const data = await fetchBoards(organization.orgId);
+				const data = await fetchBoards({ orgId: organization.orgId });
 				setBoards(data);
 			} catch (error) {
 				console.log("Failed to Load Boards", error);
@@ -44,10 +44,10 @@ const Dashboard = ({ organization }: DashboardProps) => {
 		if (!trimmedName) return;
 
 		try {
-			const newBoards = await createBoard(
-				organization.orgId,
-				trimmedName,
-			);
+			const newBoards = await createBoard({
+				orgId: organization.orgId,
+				boardName: trimmedName,
+			});
 
 			setBoardName("");
 
@@ -59,9 +59,9 @@ const Dashboard = ({ organization }: DashboardProps) => {
 
 	const handleDeleteBoard = async (boardId: string) => {
 		try {
-			await deleteBoard(organization.orgId, boardId);
+			await deleteBoard({ orgId: organization.orgId, boardId });
 
-			setBoards(await fetchBoards(organization.orgId));
+			setBoards(await fetchBoards({ orgId: organization.orgId }));
 		} catch (error) {
 			console.error("Couldn't delete board", error);
 		}
@@ -85,7 +85,7 @@ const Dashboard = ({ organization }: DashboardProps) => {
 				throw new Error("Failed to rename Board");
 			}
 
-			setBoards(await fetchBoards(organization.orgId));
+			setBoards(await fetchBoards({ orgId: organization.orgId }));
 		} catch (error) {
 			console.error("Failed to rename Board", error);
 		}

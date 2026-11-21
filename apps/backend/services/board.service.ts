@@ -12,6 +12,13 @@ export async function createBoard({ boardName, orgId }: CreateBoardParams) {
 		data: {
 			boardName,
 			orgId,
+			sections: {
+				create: [
+					{ sectionTitle: "TO DO" },
+					{ sectionTitle: "In Progress" },
+					{ sectionTitle: "Done" },
+				],
+			},
 		},
 	});
 }

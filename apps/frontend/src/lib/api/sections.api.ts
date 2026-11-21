@@ -6,11 +6,15 @@ export interface Section {
 	boardId: string;
 }
 
-export const createSection = async (
-	sectionTitle: string,
-	orgId: string,
-	boardId: string,
-): Promise<Section> => {
+export const createSection = async ({
+	sectionTitle,
+	orgId,
+	boardId,
+}: {
+	sectionTitle: string;
+	orgId: string;
+	boardId: string;
+}): Promise<Section> => {
 	const response = await fetch(
 		`${ROOT_URL}/organizations/${orgId}/boards/${boardId}/sections`,
 		{
@@ -29,10 +33,13 @@ export const createSection = async (
 	return response.json();
 };
 
-export const getSections = async (
-	orgId: string,
-	boardId: string,
-): Promise<Section[]> => {
+export const getSections = async ({
+	orgId,
+	boardId,
+}: {
+	orgId: string;
+	boardId: string;
+}): Promise<Section[]> => {
 	const response = await fetch(
 		`${ROOT_URL}/organizations/${orgId}/boards/${boardId}/sections`,
 	);
@@ -44,11 +51,15 @@ export const getSections = async (
 	return response.json();
 };
 
-export const deleteSectionById = async (
-	orgId: string,
-	boardId: string,
-	sectionId: string,
-): Promise<void> => {
+export const deleteSectionById = async ({
+	orgId,
+	boardId,
+	sectionId,
+}: {
+	orgId: string;
+	boardId: string;
+	sectionId: string;
+}): Promise<void> => {
 	const response = await fetch(
 		`${ROOT_URL}/organizations/${orgId}/boards/${boardId}/sections/${sectionId}`,
 		{

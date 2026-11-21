@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { Board } from "@/lib/api/boards.api";
+import { deleteBoard, type Board } from "@/lib/api/boards.api";
 import {
 	getSections,
 	createSection,
 	type Section,
+	deleteSectionById,
 } from "@/lib/api/sections.api";
 
 const Board = ({ board }: { board: Board }) => {
@@ -15,12 +16,17 @@ const Board = ({ board }: { board: Board }) => {
 	useEffect(() => {
 		const loadSections = async () => {
 			try {
-				const data = await getSections(board.orgId, board.boardId);
+				const data = await getSections({
+					orgId: board.orgId,
+					boardId: board.boardId,
+				});
+
 				setSections(data);
 			} catch (error) {
 				console.log("Failed to load sections", error);
 			}
 		};
+
 		loadSections();
 	}, [board.boardId, board.orgId]);
 
@@ -30,11 +36,12 @@ const Board = ({ board }: { board: Board }) => {
 		if (!trimmedName) return;
 
 		try {
-			const newSection = await createSection(
-				board.orgId,
-				board.boardId,
-				trimmedName,
-			);
+			const newSection = await createSection({
+				orgId: board.orgId,
+				boardId: board.boardId,
+				sectionTitle: trimmedName,
+			});
+
 			setSectionTitle("");
 			setSections((prev) => [...prev, newSection]);
 		} catch (error) {
@@ -42,13 +49,27 @@ const Board = ({ board }: { board: Board }) => {
 		}
 	};
 
-	console.log("section", sections);
-	console.log("section-title", sectionTitle);
+	const handleDeleteSection = async (id: string) => {
+		try {
+			await deleteSectionById({
+				orgId: board.orgId,
+				boardId: board.boardId,
+				sectionId: id,
+			});
+
+			setSections((prev) =>
+				prev.filter((section) => section.sectionId !== id),
+			);
+		} catch (error) {
+			console.log("Couldn't delete the section", error);
+		}
+	};
 
 	return (
 		<div>
 			<h3>{board.boardName}</h3>
 			<span>section making screen</span>
+
 			<div>
 				<input
 					type="text"
@@ -58,11 +79,20 @@ const Board = ({ board }: { board: Board }) => {
 				/>
 				<button onClick={handleCreateSection}>Add Section</button>
 			</div>
+
 			<div>
 				<ul>
-					{sections.map((section) => {
-						return <li key={section.sectionId}>{sectionTitle}</li>;
-					})}
+					{sections.map((section) => (
+						<li key={section.sectionId}>
+							{section.sectionTitle}
+							<button
+								onClick={() =>
+									handleDeleteSection(section.sectionId)
+								}>
+								Delete
+							</button>
+						</li>
+					))}
 				</ul>
 			</div>
 		</div>

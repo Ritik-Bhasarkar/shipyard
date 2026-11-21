@@ -6,7 +6,11 @@ export interface Board {
 	orgId: string;
 }
 
-export async function fetchBoards(orgId: string): Promise<Board[]> {
+export async function fetchBoards({
+	orgId,
+}: {
+	orgId: string;
+}): Promise<Board[]> {
 	const response = await fetch(`${ROOT_URL}/organizations/${orgId}/boards`);
 
 	if (!response.ok) {
@@ -17,7 +21,13 @@ export async function fetchBoards(orgId: string): Promise<Board[]> {
 	return data ?? [];
 }
 
-export async function createBoard(orgId: string, boardName: string) {
+export async function createBoard({
+	orgId,
+	boardName,
+}: {
+	orgId: string;
+	boardName: string;
+}) {
 	const response = await fetch(`${ROOT_URL}/organizations/${orgId}/boards`, {
 		method: "POST",
 		headers: {
@@ -33,17 +43,17 @@ export async function createBoard(orgId: string, boardName: string) {
 	return response.json();
 }
 
-export async function deleteBoard(
-	orgId: string,
-	boardId: string,
-): Promise<void> {
+export async function deleteBoard({
+	orgId,
+	boardId,
+}: {
+	orgId: string;
+	boardId: string;
+}): Promise<void> {
 	const response = await fetch(
 		`${ROOT_URL}/organizations/${orgId}/boards/${boardId}`,
 		{
 			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
-			},
 		},
 	);
 
